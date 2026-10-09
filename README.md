@@ -23,25 +23,25 @@ document intelligence platform, and multi-agent workspace**.
 
 ## Frontend
 Use:
-    Next.js
-    TypeScript
-    React
-    Tailwind CSS
-    shadcn/ui
-    React Query / TanStack Query
-    Zustand where global client state is required
-    Lucide React icons
+    Next.js,
+    TypeScript,
+    React,
+    Tailwind CSS,
+    shadcn/ui,
+    React Query / TanStack Query,
+    Zustand where global client state is required,
+    Lucide React icons,
 
 ## Backend
 
 Use:
-   Python
-   FastAPI
-   Pydantic
-   SQLAlchemy
-   PostgreSQL
-   Alembic
-   Uvicorn
+   Python,
+   FastAPI,
+   Pydantic,
+   SQLAlchemy,
+   PostgreSQL,
+   Alembic,
+   Uvicorn,
 
 
    
