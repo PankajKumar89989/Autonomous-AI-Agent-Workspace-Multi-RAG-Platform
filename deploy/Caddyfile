@@ -1,0 +1,14 @@
+# Automatic HTTPS (Let's Encrypt) for {$DOMAIN}. With DOMAIN=localhost Caddy issues a local certificate instead.
+{$DOMAIN} {
+	# The API: no compression and no buffering, so Server-Sent Events (chat, research progress) stream live.
+	handle /api/* {
+		reverse_proxy backend:8000 {
+			flush_interval -1
+		}
+	}
+
+	handle {
+		encode zstd gzip
+		reverse_proxy frontend:3000
+	}
+}
