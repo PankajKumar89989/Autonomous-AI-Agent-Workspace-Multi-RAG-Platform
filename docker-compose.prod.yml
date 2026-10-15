@@ -1,0 +1,45 @@
+# Production, with automatic HTTPS:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+# Naming both files explicitly keeps docker-compose.override.yml (the dev ports) out of production.
+# The database and Redis are never published; only Caddy listens on 80 and 443.
+services:
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+
+  backend:
+    environment: &prod-env
+      DATABASE_URL: postgresql+asyncpg://postgres:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@postgres:5432/ai_workspace
+      REDIS_URL: redis://redis:6379/0
+      UPLOAD_DIR: /app/uploads
+      ENVIRONMENT: production
+      COOKIE_SECURE: "true"
+      TRUST_PROXY_HEADERS: "true"
+      DOCS_ENABLED: "false"
+      CORS_ORIGINS: https://${DOMAIN:?set DOMAIN in .env}
+
+  worker:
+    environment: *prod-env
+
+  frontend:
+    build:
+      args:
+        NEXT_PUBLIC_API_URL: ""  # same origin: Caddy routes /api/* to the API
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN in .env}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      backend: { condition: service_healthy }
+      frontend: { condition: service_healthy }
+
+volumes:
+  caddy_data:
+  caddy_config:

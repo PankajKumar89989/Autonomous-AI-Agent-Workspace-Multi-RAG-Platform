@@ -1,0 +1,10 @@
+# Loaded automatically by `docker compose up` for local use. Ports are bound to 127.0.0.1 only.
+services:
+  postgres:
+    ports: ["127.0.0.1:5432:5432"]
+  redis:
+    ports: ["127.0.0.1:6379:6379"]
+  backend:
+    ports: ["127.0.0.1:8000:8000"]
+  frontend:
+    ports: ["127.0.0.1:3000:3000"]
